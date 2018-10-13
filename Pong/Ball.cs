@@ -8,7 +8,6 @@ namespace Pong
 {
     public class Ball : Sprite
     {
-        
         private Paddle attachedToPaddle;
 
         public Ball(Texture2D texture, Vector2 location, Rectangle gameBoundaries) : base(texture, location, gameBoundaries)
@@ -49,29 +48,29 @@ namespace Pong
             }
 
             // Detect collision with opponent paddle
-            if ((Right >= gameObjects.ComputerPaddle.Left) &&
-                (Bottom <= gameObjects.ComputerPaddle.Top) &&
-                (Top >= gameObjects.ComputerPaddle.Bottom))
-            {
-                SetXVelocity(false);
-            }
+            //if ((Right >= gameObjects.ComputerPaddle.Left) &&
+            //    (Bottom <= gameObjects.ComputerPaddle.Top) &&
+            //    (Top >= gameObjects.ComputerPaddle.Bottom))
+            //{
+            //    SetXVelocity(false);
+            //}
 
-            // detect collision with player paddle
-            if ((Left <= gameObjects.PlayerPaddle.Right) &&
-                (Bottom <= gameObjects.PlayerPaddle.Top) &&
-                (Top >= gameObjects.PlayerPaddle.Bottom))
-            {
-                SetXVelocity(true);
-            }
+            //// detect collision with player paddle
+            //if ((Left <= gameObjects.PlayerPaddle.Right) &&
+            //    (Bottom <= gameObjects.PlayerPaddle.Top) &&
+            //    (Top >= gameObjects.PlayerPaddle.Bottom))
+            //{
+            //    SetXVelocity(true);
+            //}
 
-            // detect goes past opponent >> touches right wall >> collision 
-            if (Right >= GameBoundaries.Width)
-            {
-                ResetGame(true, gameObjects.PlayerPaddle);
-            } else if (Left <= 0)
-            {
-                ResetGame(false, gameObjects.PlayerPaddle);
-            }
+            //// detect goes past opponent >> touches right wall >> collision 
+            //if (Right >= GameBoundaries.Width)
+            //{
+            //    ResetGame(true, gameObjects.PlayerPaddle);
+            //} else if (Left <= 0)
+            //{
+            //    ResetGame(false, gameObjects.PlayerPaddle);
+            //}
         }
 
         private void ResetGame(bool paddleWon, Paddle paddle)
@@ -101,6 +100,17 @@ namespace Pong
             if (attachedToPaddle != null)
             {
                 StickToAttached();
+            }
+            else
+            {
+                // detect paddle collisions
+                if (BoundingBox.Intersects(gameObjects.ComputerPaddle.BoundingBox))
+                {
+                    SetXVelocity(false);
+                } else if (BoundingBox.Intersects(gameObjects.PlayerPaddle.BoundingBox))
+                {
+                    SetXVelocity(true);
+                }
             }
 
             // call base class
