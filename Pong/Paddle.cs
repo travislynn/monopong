@@ -15,7 +15,7 @@ namespace Pong
     public class Paddle : Sprite
     {
         private readonly PlayerType _playerType;
-        public Ball Ball { get; set; }
+        //public Ball Ball { get; set; }
 
         public Paddle(Texture2D texture, Vector2 location, Rectangle gameBoundaries, PlayerType playerType) : 
             base(texture, location, gameBoundaries)
@@ -23,7 +23,7 @@ namespace Pong
             _playerType = playerType;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, GameObjects gameObjects)
         {
             if (_playerType == PlayerType.Human)
             {
@@ -39,19 +39,19 @@ namespace Pong
                 }
             } else if (_playerType == PlayerType.Computer)
             {
-                if (Ball.Top > Top + YThreshold())
+                if (gameObjects.Ball.Top > Top + YThreshold())
                 {
                     var newVal = new Vector2(0, Speed());
                     Velocity = newVal;
                 }
-                else if (Ball.Bottom < Bottom - YThreshold())
+                else if (gameObjects.Ball.Bottom < Bottom - YThreshold())
                 {
                     var newVal = new Vector2(0, -Speed());
                     Velocity = newVal;
                 }
             }
             
-            base.Update(gameTime);
+            base.Update(gameTime, gameObjects);
         }
 
         protected override void CheckBounds()

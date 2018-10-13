@@ -89,7 +89,7 @@ namespace Pong
             attachedToPaddle = paddle;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, GameObjects gameObjects)
         {
             // fire the ball from starting position
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && attachedToPaddle != null)
@@ -106,7 +106,7 @@ namespace Pong
             }
 
             // call base class
-            base.Update(gameTime);
+            base.Update(gameTime, gameObjects);
         }
 
         private void StickToAttached()

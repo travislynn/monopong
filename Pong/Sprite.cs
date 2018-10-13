@@ -31,7 +31,7 @@ namespace Pong
             spriteBatch.Draw(texture, Location, Color.White);
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, GameObjects gameObjects)
         {
             Location += Velocity;
             CheckBounds();

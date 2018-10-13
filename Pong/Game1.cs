@@ -57,7 +57,7 @@ namespace Pong
             ball = new Ball(Content.Load<Texture2D>("ball"), Vector2.Zero, gameBoundaries, playerPaddle, opponentPaddle);
             ball.AttachTo(playerPaddle);
 
-            opponentPaddle.Ball = ball;
+            //opponentPaddle.Ball = ball;
         }
 
         /// <summary>
@@ -76,12 +76,18 @@ namespace Pong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            playerPaddle.Update(gameTime);
-            ball.Update(gameTime);
-            opponentPaddle.Update(gameTime);
+            GameObjects gameObjects = new GameObjects
+            {
+                Ball = ball
+            };
+
+            playerPaddle.Update(gameTime, gameObjects);
+            ball.Update(gameTime, gameObjects);
+            opponentPaddle.Update(gameTime, gameObjects);
 
             base.Update(gameTime);
         }
