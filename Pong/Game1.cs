@@ -17,6 +17,9 @@ namespace Pong
         private Paddle opponentPaddle;
         private Ball ball;
         private GameObjects gameObjects;
+        private SpriteFont font;
+        private int playerScore = 0;
+        private int opponentScore = 0;
 
         public Game1()
         {
@@ -45,6 +48,7 @@ namespace Pong
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("Score"); // Use the name of your sprite font file here instead of 'Score'.
 
             var gameBoundaries = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
             var paddleContent = Content.Load<Texture2D>("paddle");
@@ -87,8 +91,18 @@ namespace Pong
                 Exit();
 
             playerPaddle.Update(gameTime, gameObjects);
-            ball.Update(gameTime, gameObjects);
             opponentPaddle.Update(gameTime, gameObjects);
+            ball.Update(gameTime, gameObjects);
+
+            if (ball.PastOpponent)
+            {
+                playerScore += 1;
+                ball.AttachTo(playerPaddle);
+            } else if (ball.PastPlayer)
+            {
+                opponentScore += 1;
+                ball.AttachTo(playerPaddle);
+            }
 
             base.Update(gameTime);
         }
@@ -106,6 +120,7 @@ namespace Pong
             playerPaddle.Draw(spriteBatch);
             ball.Draw(spriteBatch);
             opponentPaddle.Draw(spriteBatch);
+            spriteBatch.DrawString(font, $"Score {playerScore} - {opponentScore}", new Vector2(100, 100), Color.Black);
 
             spriteBatch.End();
 

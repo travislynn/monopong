@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,6 +12,16 @@ namespace Pong
         public Ball(Texture2D texture, Vector2 location, Rectangle gameBoundaries) : base(texture, location, gameBoundaries)
         {
             
+        }
+
+        public bool PastOpponent
+        {
+            get { return BoundingBox.Left >= GameBoundaries.Right; }
+        }
+
+        public bool PastPlayer
+        {
+            get { return BoundingBox.Right <= GameBoundaries.Left; }
         }
 
         private void InvertYVelocity()
@@ -73,13 +82,13 @@ namespace Pong
             //}
         }
 
-        private void ResetGame(bool paddleWon, Paddle paddle)
-        {
-            // update score
+        //private void ResetGame(bool paddleWon, Paddle paddle)
+        //{
+        //    // update score
 
-            Velocity = Vector2.Zero;
-            AttachTo(paddle);
-        }
+        //    Velocity = Vector2.Zero;
+        //    AttachTo(paddle);
+        //}
 
         public void AttachTo(Paddle paddle)
         {
