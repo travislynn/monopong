@@ -30,6 +30,9 @@ namespace Pong
             Velocity = newVelocity;
         }
 
+        // I'm using this method so that clips on vertical boundaries behave appropriately
+        // simply inverting makes the ball get stuck as it is within the paddle for multiple ticks
+        // eg.  Only invert if ball is heading in the opposite direction
         private void SetXVelocity(bool pos)
         {
             if (!pos && Velocity.X > 0f || pos && Velocity.X < 0f)
@@ -55,41 +58,8 @@ namespace Pong
             {
                 InvertYVelocity();
             }
-
-            // Detect collision with opponent paddle
-            //if ((Right >= gameObjects.ComputerPaddle.Left) &&
-            //    (Bottom <= gameObjects.ComputerPaddle.Top) &&
-            //    (Top >= gameObjects.ComputerPaddle.Bottom))
-            //{
-            //    SetXVelocity(false);
-            //}
-
-            //// detect collision with player paddle
-            //if ((Left <= gameObjects.PlayerPaddle.Right) &&
-            //    (Bottom <= gameObjects.PlayerPaddle.Top) &&
-            //    (Top >= gameObjects.PlayerPaddle.Bottom))
-            //{
-            //    SetXVelocity(true);
-            //}
-
-            //// detect goes past opponent >> touches right wall >> collision 
-            //if (Right >= GameBoundaries.Width)
-            //{
-            //    ResetGame(true, gameObjects.PlayerPaddle);
-            //} else if (Left <= 0)
-            //{
-            //    ResetGame(false, gameObjects.PlayerPaddle);
-            //}
         }
-
-        //private void ResetGame(bool paddleWon, Paddle paddle)
-        //{
-        //    // update score
-
-        //    Velocity = Vector2.Zero;
-        //    AttachTo(paddle);
-        //}
-
+        
         public void AttachTo(Paddle paddle)
         {
             attachedToPaddle = paddle;
@@ -100,7 +70,7 @@ namespace Pong
             // fire the ball from starting position
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && attachedToPaddle != null)
             {
-                var newVelocity = new Vector2(4f, attachedToPaddle.Velocity.Y * .9f);
+                var newVelocity = new Vector2(6f, attachedToPaddle.Velocity.Y * .92f);
                 Velocity = newVelocity;
                 attachedToPaddle = null;
             }
@@ -128,7 +98,11 @@ namespace Pong
 
         private void StickToAttached()
         {
-            Location.X = attachedToPaddle.Location.X + attachedToPaddle.Width;
+
+            Location.X = attachedToPaddle.BoundingBox.Right;
+            //Location.Y = attachedToPaddle.BoundingBox.Top - (attachedToPaddle.BoundingBox.Height / 2);
+
+            //Location.X = attachedToPaddle.Location.X + attachedToPaddle.Width;
             Location.Y = attachedToPaddle.Location.Y + (attachedToPaddle.Height / 2) - (texture.Height / 2);
         }
     }

@@ -18,8 +18,7 @@ namespace Pong
         private Ball ball;
         private GameObjects gameObjects;
         private SpriteFont font;
-        private int playerScore = 0;
-        private int opponentScore = 0;
+        private GameScore score;
 
         public Game1()
         {
@@ -52,11 +51,10 @@ namespace Pong
 
             var gameBoundaries = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
             var paddleContent = Content.Load<Texture2D>("paddle");
-
-            playerPaddle = new Paddle(paddleContent, Vector2.Zero, gameBoundaries, PlayerType.Human);
-            //opponentPaddle = new AIPaddle(paddleContent, new Vector2(gameBoundaries.Width - paddleContent.Width, 0), gameBoundaries, AIDifficulty.Threshold);
-
             var opponentLocation = new Vector2(gameBoundaries.Width - paddleContent.Width, 0);
+
+            score = new GameScore(font, gameBoundaries);
+            playerPaddle = new Paddle(paddleContent, Vector2.Zero, gameBoundaries, PlayerType.Human);
             opponentPaddle = new Paddle(paddleContent, opponentLocation, gameBoundaries, PlayerType.Computer);
 
             ball = new Ball(Content.Load<Texture2D>("ball"), Vector2.Zero, gameBoundaries);
@@ -66,7 +64,8 @@ namespace Pong
             {
                 Ball = ball,
                 PlayerPaddle = playerPaddle,
-                ComputerPaddle = opponentPaddle
+                ComputerPaddle = opponentPaddle,
+                Score = score
             };
         }
 
@@ -90,19 +89,20 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            playerPaddle.Update(gameTime, gameObjects);
-            opponentPaddle.Update(gameTime, gameObjects);
-            ball.Update(gameTime, gameObjects);
-
             if (ball.PastOpponent)
             {
-                playerScore += 1;
-                ball.AttachTo(playerPaddle);
-            } else if (ball.PastPlayer)
-            {
-                opponentScore += 1;
+                gameObjects.Score.PlayerScore += 1;
                 ball.AttachTo(playerPaddle);
             }
+            else if (ball.PastPlayer)
+            {
+                gameObjects.Score.OpponentScore += 1;
+                ball.AttachTo(playerPaddle);
+            }
+
+            ball.Update(gameTime, gameObjects);
+            playerPaddle.Update(gameTime, gameObjects);
+            opponentPaddle.Update(gameTime, gameObjects);
 
             base.Update(gameTime);
         }
@@ -120,7 +120,10 @@ namespace Pong
             playerPaddle.Draw(spriteBatch);
             ball.Draw(spriteBatch);
             opponentPaddle.Draw(spriteBatch);
-            spriteBatch.DrawString(font, $"Score {playerScore} - {opponentScore}", new Vector2(100, 100), Color.Black);
+
+            //gameObjects.Score.Draw(spriteBatch);
+
+            spriteBatch.DrawString(font, $"Score {gameObjects.Score.PlayerScore} - {gameObjects.Score.OpponentScore}", new Vector2(100, 100), Color.Black);
 
             spriteBatch.End();
 
