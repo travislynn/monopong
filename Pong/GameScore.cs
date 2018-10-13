@@ -32,5 +32,19 @@ namespace Pong
         {
             spriteBatch.DrawString(font, scoreString, scoreLocation, Color.Black);
         }
+
+        public void Update(GameTime gameTime, GameObjects gameObjects)
+        {
+            if (gameObjects.Ball.PastOpponent)
+            {
+                PlayerScore += 1;
+                gameObjects.Ball.AttachTo(gameObjects.PlayerPaddle);
+            }
+            else if (gameObjects.Ball.PastPlayer)
+            {
+                OpponentScore += 1;
+                gameObjects.Ball.AttachTo(gameObjects.PlayerPaddle);
+            }
+        }
     }
 }

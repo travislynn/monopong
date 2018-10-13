@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -39,12 +40,17 @@ namespace Pong
                 }
             } else if (_playerType == PlayerType.Computer)
             {
-                if (gameObjects.Ball.Bottom > Top + YThreshold())
+                var random = new Random();
+                var reactionThreshold = random.Next(50, 120);
+
+                if (gameObjects.Ball.Bottom > Top + reactionThreshold)
+                //if (gameObjects.Ball.Location.Y + gameObjects.Ball.Height < Location.Y + reactionThreshold)
                 {
                     var newVal = new Vector2(0, Speed());
                     Velocity = newVal;
                 }
-                else if (gameObjects.Ball.Top < Bottom - YThreshold())
+                else if (gameObjects.Ball.Top < Bottom - reactionThreshold)
+                //else if (gameObjects.Ball.Location.Y > Location.Y + Height + reactionThreshold)
                 {
                     var newVal = new Vector2(0, -Speed());
                     Velocity = newVal;
@@ -66,7 +72,7 @@ namespace Pong
             Location.Y = MathHelper.Clamp(Location.Y, 0, GameBoundaries.Height - texture.Height);
         }
 
-        public float YThreshold()
+        public float AiYThreshold()
         {
             switch (_playerType)
             {

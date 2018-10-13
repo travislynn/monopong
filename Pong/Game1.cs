@@ -89,20 +89,10 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (ball.PastOpponent)
-            {
-                gameObjects.Score.PlayerScore += 1;
-                ball.AttachTo(playerPaddle);
-            }
-            else if (ball.PastPlayer)
-            {
-                gameObjects.Score.OpponentScore += 1;
-                ball.AttachTo(playerPaddle);
-            }
-
-            ball.Update(gameTime, gameObjects);
             playerPaddle.Update(gameTime, gameObjects);
             opponentPaddle.Update(gameTime, gameObjects);
+            ball.Update(gameTime, gameObjects);
+            score.Update(gameTime, gameObjects);
 
             base.Update(gameTime);
         }
@@ -120,9 +110,7 @@ namespace Pong
             playerPaddle.Draw(spriteBatch);
             ball.Draw(spriteBatch);
             opponentPaddle.Draw(spriteBatch);
-
             gameObjects.Score.Draw(spriteBatch);
-
 
             spriteBatch.End();
 
