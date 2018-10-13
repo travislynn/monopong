@@ -121,9 +121,8 @@ namespace Pong
             ball.Draw(spriteBatch);
             opponentPaddle.Draw(spriteBatch);
 
-            //gameObjects.Score.Draw(spriteBatch);
+            gameObjects.Score.Draw(spriteBatch);
 
-            spriteBatch.DrawString(font, $"Score {gameObjects.Score.PlayerScore} - {gameObjects.Score.OpponentScore}", new Vector2(100, 100), Color.Black);
 
             spriteBatch.End();
 
