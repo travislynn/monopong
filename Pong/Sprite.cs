@@ -17,6 +17,11 @@ namespace Pong
         public float Right => Location.X + texture.Width;
         public float Left => Location.X;
 
+        public Rectangle BoundingBox
+        {
+            get { return new Rectangle((int)Location.X, (int)Location.Y, Width, Height); }
+        }
+
 
         protected Sprite(Texture2D texture, Vector2 location, Rectangle gameBoundaries)
         {
@@ -34,10 +39,10 @@ namespace Pong
         public virtual void Update(GameTime gameTime, GameObjects gameObjects)
         {
             Location += Velocity;
-            CheckBounds();
+            CheckBounds(gameObjects);
         }
 
-        protected abstract void CheckBounds();
+        protected abstract void CheckBounds(GameObjects gameObjects);
 
 
     }

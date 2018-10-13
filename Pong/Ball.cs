@@ -8,14 +8,12 @@ namespace Pong
 {
     public class Ball : Sprite
     {
-        public Paddle PlayerPaddle { get; }
-        public Paddle OpponentPaddle { get; }
+        
         private Paddle attachedToPaddle;
 
-        public Ball(Texture2D texture, Vector2 location, Rectangle gameBoundaries, Paddle playerPaddle, Paddle opponentPaddle) : base(texture, location, gameBoundaries)
+        public Ball(Texture2D texture, Vector2 location, Rectangle gameBoundaries) : base(texture, location, gameBoundaries)
         {
-            PlayerPaddle = playerPaddle;
-            OpponentPaddle = opponentPaddle;
+            
         }
 
         private void InvertYVelocity()
@@ -43,7 +41,7 @@ namespace Pong
             return Bottom <= 0;
         }
 
-        protected override void CheckBounds()
+        protected override void CheckBounds(GameObjects gameObjects)
         {
             if (CollisionTop() || CollisionBottom())
             {
@@ -51,17 +49,17 @@ namespace Pong
             }
 
             // Detect collision with opponent paddle
-            if ((Right >= OpponentPaddle.Left) &&
-                (Bottom <= OpponentPaddle.Top) &&
-                (Top >= OpponentPaddle.Bottom))
+            if ((Right >= gameObjects.ComputerPaddle.Left) &&
+                (Bottom <= gameObjects.ComputerPaddle.Top) &&
+                (Top >= gameObjects.ComputerPaddle.Bottom))
             {
                 SetXVelocity(false);
             }
 
             // detect collision with player paddle
-            if ((Left <= PlayerPaddle.Right) &&
-                (Bottom <= PlayerPaddle.Top) &&
-                (Top >= PlayerPaddle.Bottom))
+            if ((Left <= gameObjects.PlayerPaddle.Right) &&
+                (Bottom <= gameObjects.PlayerPaddle.Top) &&
+                (Top >= gameObjects.PlayerPaddle.Bottom))
             {
                 SetXVelocity(true);
             }
@@ -69,19 +67,19 @@ namespace Pong
             // detect goes past opponent >> touches right wall >> collision 
             if (Right >= GameBoundaries.Width)
             {
-                ResetGame(true);
+                ResetGame(true, gameObjects.PlayerPaddle);
             } else if (Left <= 0)
             {
-                ResetGame(false);
+                ResetGame(false, gameObjects.PlayerPaddle);
             }
         }
 
-        private void ResetGame(bool paddleWon)
+        private void ResetGame(bool paddleWon, Paddle paddle)
         {
             // update score
 
             Velocity = Vector2.Zero;
-            AttachTo(PlayerPaddle);
+            AttachTo(paddle);
         }
 
         public void AttachTo(Paddle paddle)
@@ -94,7 +92,7 @@ namespace Pong
             // fire the ball from starting position
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && attachedToPaddle != null)
             {
-                var newVelocity = new Vector2(4f, attachedToPaddle.Velocity.Y);
+                var newVelocity = new Vector2(4f, attachedToPaddle.Velocity.Y * .9f);
                 Velocity = newVelocity;
                 attachedToPaddle = null;
             }

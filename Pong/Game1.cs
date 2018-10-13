@@ -16,6 +16,7 @@ namespace Pong
         private Paddle playerPaddle;
         private Paddle opponentPaddle;
         private Ball ball;
+        private GameObjects gameObjects;
 
         public Game1()
         {
@@ -54,10 +55,15 @@ namespace Pong
             var opponentLocation = new Vector2(gameBoundaries.Width - paddleContent.Width, 0);
             opponentPaddle = new Paddle(paddleContent, opponentLocation, gameBoundaries, PlayerType.Computer);
 
-            ball = new Ball(Content.Load<Texture2D>("ball"), Vector2.Zero, gameBoundaries, playerPaddle, opponentPaddle);
+            ball = new Ball(Content.Load<Texture2D>("ball"), Vector2.Zero, gameBoundaries);
             ball.AttachTo(playerPaddle);
 
-            //opponentPaddle.Ball = ball;
+            gameObjects = new GameObjects
+            {
+                Ball = ball,
+                PlayerPaddle = playerPaddle,
+                ComputerPaddle = opponentPaddle
+            };
         }
 
         /// <summary>
@@ -79,11 +85,6 @@ namespace Pong
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            GameObjects gameObjects = new GameObjects
-            {
-                Ball = ball
-            };
 
             playerPaddle.Update(gameTime, gameObjects);
             ball.Update(gameTime, gameObjects);

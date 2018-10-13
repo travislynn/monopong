@@ -2,6 +2,8 @@
 {
     public class GameObjects
     {
-        public Ball Ball;
+        public Ball Ball { get; set; }
+        public Paddle PlayerPaddle { get; set; }
+        public Paddle ComputerPaddle { get; set; }
     }
 }

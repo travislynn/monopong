@@ -39,12 +39,12 @@ namespace Pong
                 }
             } else if (_playerType == PlayerType.Computer)
             {
-                if (gameObjects.Ball.Top > Top + YThreshold())
+                if (gameObjects.Ball.Bottom > Top + YThreshold())
                 {
                     var newVal = new Vector2(0, Speed());
                     Velocity = newVal;
                 }
-                else if (gameObjects.Ball.Bottom < Bottom - YThreshold())
+                else if (gameObjects.Ball.Top < Bottom - YThreshold())
                 {
                     var newVal = new Vector2(0, -Speed());
                     Velocity = newVal;
@@ -54,7 +54,7 @@ namespace Pong
             base.Update(gameTime, gameObjects);
         }
 
-        protected override void CheckBounds()
+        protected override void CheckBounds(GameObjects gameObjects)
         {
             // stop vertical movement when collision with game boundaries
             
@@ -71,7 +71,8 @@ namespace Pong
             switch (_playerType)
             {
                 case PlayerType.Computer:
-                    return GameBoundaries.Height / 5f;
+                    return GameBoundaries.Height / 7.5f;
+                    //return 0f;
                 default:
                     return 0f;
             }
