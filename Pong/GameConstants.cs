@@ -10,7 +10,7 @@ namespace Pong
     {
         public static readonly float PaddleSpeed = 290f;
         public static readonly float BallXSpeed = 320f;
-        public static readonly float BallYSpeedPercent = .92f;
+        public static readonly float BallYSpeedPercent = .93f;
 
         public static int AiReactionThresholdMin = 80;
         public static int AiReactionThresholdMax = 280;

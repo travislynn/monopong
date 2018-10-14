@@ -44,14 +44,23 @@ namespace Pong
                 var paddleTop = paddle.BoundingBox.Top;
                 var paddleBottom = paddle.BoundingBox.Bottom;
 
-                var directHitPercent = 30;
-                var sideHitPercent = 40;
-                var edgeHitPercent = 30;
 
-                float newVelX = Velocity.X;
-                float newVelY = Velocity.Y;
+                float newVelX = GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent; //Velocity.X;
+                float newVelY =  Velocity.Y;
+                if (Velocity.X < 0) newVelX = -newVelX;
 
-                if (centerY > paddleYCenter)
+                int yPercent = 50;
+                int xPercent = 50;
+
+                if (centerY > paddleYCenter + paddle.BoundingBox.Height / 2 ||
+                    centerY < paddleYCenter - paddle.BoundingBox.Height / 2)
+                {
+                    yPercent = 75;
+                    xPercent = 25;
+                }
+
+                // at center point, decide to reflect up or down
+                if (centerY >= paddleYCenter)
                 {
                     // go up
                     newVelY = GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent;
@@ -61,6 +70,18 @@ namespace Pong
                     // go down
                     newVelY = -GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent;
                 }
+
+                // enforce mins and max
+                if (yPercent > 90) yPercent = 90;
+                if (yPercent < 10) yPercent = 10;
+                if (xPercent > 90) xPercent = 90;
+                if (xPercent < 10) xPercent = 10;
+
+                
+                // apply percent changes to velocities.  Should be no change yet at 50/50
+                newVelY = newVelY * yPercent / 100;
+                newVelX = newVelX * xPercent / 100;
+
 
                 var newVelocity = new Vector2(-newVelX, newVelY);
                 Velocity = newVelocity;
