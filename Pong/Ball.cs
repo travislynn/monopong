@@ -33,11 +33,36 @@ namespace Pong
         // I'm using this method so that clips on vertical boundaries behave appropriately
         // simply inverting makes the ball get stuck as it is within the paddle for multiple ticks
         // eg.  Only invert if ball is heading in the opposite direction
-        private void SetXVelocity(bool pos)
+        private void SetXVelocity(bool pos, Paddle paddle)
         {
             if (!pos && Velocity.X > 0f || pos && Velocity.X < 0f)
             {
-                var newVelocity = new Vector2(-Velocity.X, Velocity.Y);
+                var centerX = BoundingBox.Center.X;
+                var centerY = BoundingBox.Center.Y;
+
+                var paddleYCenter = paddle.BoundingBox.Center.Y;
+                var paddleTop = paddle.BoundingBox.Top;
+                var paddleBottom = paddle.BoundingBox.Bottom;
+
+                var directHitPercent = 30;
+                var sideHitPercent = 40;
+                var edgeHitPercent = 30;
+
+                float newVelX = Velocity.X;
+                float newVelY = Velocity.Y;
+
+                if (centerY > paddleYCenter)
+                {
+                    // go up
+                    newVelY = GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent;
+                }
+                else
+                {
+                    // go down
+                    newVelY = -GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent;
+                }
+
+                var newVelocity = new Vector2(-newVelX, newVelY);
                 Velocity = newVelocity;
             }
         }
@@ -70,7 +95,7 @@ namespace Pong
             // fire the ball from starting position
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && attachedToPaddle != null)
             {
-                var newVelocity = new Vector2(6f, attachedToPaddle.Velocity.Y * .92f);
+                var newVelocity = new Vector2(GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent, GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent);
                 Velocity = newVelocity;
                 attachedToPaddle = null;
             }
@@ -85,10 +110,10 @@ namespace Pong
                 // detect paddle collisions
                 if (BoundingBox.Intersects(gameObjects.ComputerPaddle.BoundingBox))
                 {
-                    SetXVelocity(false);
+                    SetXVelocity(false, gameObjects.ComputerPaddle);
                 } else if (BoundingBox.Intersects(gameObjects.PlayerPaddle.BoundingBox))
                 {
-                    SetXVelocity(true);
+                    SetXVelocity(true, gameObjects.PlayerPaddle);
                 }
             }
 

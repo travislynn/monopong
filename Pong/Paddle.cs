@@ -31,7 +31,7 @@ namespace Pong
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 {
                     // move paddle up
-                    Velocity = new Vector2(0, -5f);
+                    Velocity = new Vector2(0, -GameConstants.PaddleSpeed);
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 {
@@ -41,18 +41,19 @@ namespace Pong
             } else if (_playerType == PlayerType.Computer)
             {
                 var random = new Random();
-                var reactionThreshold = random.Next(50, 120);
+                var reactionThreshold = random.Next(GameConstants.AiReactionThresholdMin, GameConstants.AiReactionThresholdMax);
+                var reactionThreshOffset = reactionThreshold / 100 * texture.Height;
 
-                if (gameObjects.Ball.Bottom > Top + reactionThreshold)
+                if (gameObjects.Ball.Bottom > Top + reactionThreshOffset)
                 //if (gameObjects.Ball.Location.Y + gameObjects.Ball.Height < Location.Y + reactionThreshold)
                 {
-                    var newVal = new Vector2(0, Speed());
+                    var newVal = new Vector2(0, AiSpeed());
                     Velocity = newVal;
                 }
-                else if (gameObjects.Ball.Top < Bottom - reactionThreshold)
+                else if (gameObjects.Ball.Top < Bottom - reactionThreshOffset)
                 //else if (gameObjects.Ball.Location.Y > Location.Y + Height + reactionThreshold)
                 {
-                    var newVal = new Vector2(0, -Speed());
+                    var newVal = new Vector2(0, -AiSpeed());
                     Velocity = newVal;
                 }
             }
@@ -72,19 +73,19 @@ namespace Pong
             Location.Y = MathHelper.Clamp(Location.Y, 0, GameBoundaries.Height - texture.Height);
         }
 
-        public float AiYThreshold()
-        {
-            switch (_playerType)
-            {
-                case PlayerType.Computer:
-                    return GameBoundaries.Height / 7.5f;
-                    //return 0f;
-                default:
-                    return 0f;
-            }
-        }
+        //public float AiYThreshold()
+        //{
+        //    switch (_playerType)
+        //    {
+        //        case PlayerType.Computer:
+        //            return GameBoundaries.Height / 7.5f;
+        //            //return 0f;
+        //        default:
+        //            return 0f;
+        //    }
+        //}
 
-        private float Speed()
+        private float AiSpeed()
         {
             switch (_playerType)
             {
