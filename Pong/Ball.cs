@@ -45,7 +45,7 @@ namespace Pong
                 var paddleBottom = paddle.BoundingBox.Bottom;
 
 
-                float newVelX = GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent; //Velocity.X;
+                float newVelX = GameConstants.BallXSpeed; //Velocity.X;
                 float newVelY =  Velocity.Y;
                 if (Velocity.X < 0) newVelX = -newVelX;
 
@@ -63,12 +63,12 @@ namespace Pong
                 if (centerY >= paddleYCenter)
                 {
                     // go up
-                    newVelY = GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent;
+                    newVelY = GameConstants.BallXSpeed;
                 }
                 else
                 {
                     // go down
-                    newVelY = -GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent;
+                    newVelY = -GameConstants.BallXSpeed;
                 }
 
                 // enforce mins and max
@@ -116,7 +116,7 @@ namespace Pong
             // fire the ball from starting position
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && attachedToPaddle != null)
             {
-                var newVelocity = new Vector2(GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent, GameConstants.BallXSpeed * GameConstants.BallYSpeedPercent);
+                var newVelocity = new Vector2(gameObjects.PlayerPaddle.Velocity.Y, GameConstants.BallXSpeed);
                 Velocity = newVelocity;
                 attachedToPaddle = null;
             }
